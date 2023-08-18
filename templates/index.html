@@ -1,212 +1,62 @@
 <html>
-    <head>
+    
+<head>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCsbWnZ-dIt61WeI9VO6szKod-CRsyS8W4"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" />
+</head>
 
-        <style>
-            html,
-            body {
-                height: 100%;
-                margin: 0;
-            }
-            
-            #map {
-                height: 100%;
-                background:red;
-            }
-        </style>
-        <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.19.0.min.js"></script>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" />
-  
-
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCsbWnZ-dIt61WeI9VO6szKod-CRsyS8W4"></script>
-        
-    </head>
-
-    <body>
-      <!--  <div id="map"></div> -->
-        <div class="container">
-            <h1>Moving Object Tracker</h1>
-            <div id="map-canvas" style="width:600px;height:400px"></div>
-        </div>
-		<br />
-
-		<div>
-			<center>
-			<button onclick="move1()"> GPS 1</button>
-			<br />
-			<button onclick="move2()"> GPS 2 </button>
-			<br />
-			<button onclick="move3()"> GPS 3 </button>
-		</center>
+<body>
+    <div class="container-fluid">
+        <h1 class="text-center">Moving Object Tracker</h1>
+    
+		<div class="row">
+			<div class="col-sm-7">
+				<table class="table">
+					<thead>
+					<tr>
+						<th scope="col">#</th>
+						<th scope="col">First</th>
+						<th scope="col">Last</th>
+						<th scope="col">Handle</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<th scope="row">1</th>
+						<td>Mark</td>
+						<td>Otto</td>
+						<td>@mdo</td>
+					</tr>
+					<tr>
+						<th scope="row">2</th>
+						<td>Jacob</td>
+						<td>Thornton</td>
+						<td>@fat</td>
+					</tr>
+					<tr>
+						<th scope="row">3</th>
+						<td colspan="2">Larry the Bird</td>
+						<td>@twitter</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-sm-5" id="map-canvas" style="width:600px;height:400px"></div>
+				<script>
+					// Philippine Map
+					window.lat = 12.8797;
+					window.lng = 121.7740;
+					var map = new google.maps.Map(document.getElementById('map-canvas'), {center:{lat:lat,lng:lng},zoom:5});
+				</script>
+			</div>
 		</div>
+	</div>
 
-     
-        <script>
-            var pnChannel = "map-channel";
-            var pubnub = new PubNub({
-                            publishKey:   'pub-c-3a0c331d-6dfd-4e0c-ae5a-efe81298da62',
-                            subscribeKey: 'sub-c-9b1b6642-c02c-4a31-8318-b11a7e03d387'
-                            });
-    
-    
-            pubnub.subscribe({channels: [pnChannel]});
-            
-			//, 
-            window.lat = 8.239908953967545;
-            window.lng = 124.24478108857517;
-            function circlePoint(time) {
-            var radius = 0.01;
-            var x = Math.cos(time) * radius;
-            var y = Math.sin(time) * radius;
-            return {lat:window.lat + y, lng:window.lng + x};
-            };
-    
-			var birds = [];
-			
-			birds.push(
-				{
-					color: "#FF0000"
-				}
-			);
-			
-			birds.push(
-				{
-					color: "#ADD8E6"
-				}
-			);
-            var map;
-            var mark;
-			
-			//<a href="https://www.freeiconspng.com/img/41764" title="Image from freeiconspng.com"><img src="https://www.freeiconspng.com/uploads/pigeon-dove-png-transparent-31.png" width="350" alt="Pigeon, Dove PNG Transparent" /></a>
-            
-            map  = new google.maps.Map(document.getElementById('map-canvas'), {center:{lat:lat,lng:lng},zoom:19});
-			
-			var mark = []
-            mark.push( new google.maps.Marker(
-											{
-												position:{lat:lat, lng:lng}, 
-												map:map,
-												icon: {
-														url: 'https://www.freeiconspng.com/uploads/pigeon-dove-png-transparent-31.png',
-														scaledSize: new google.maps.Size(50, 50), // scaled size
-														origin: new google.maps.Point(0,0), // origin
-														anchor: new google.maps.Point(0, 0) // anchor
-													}
-											})
-											);
-																				
-											
-			mark.push( new google.maps.Marker(
-											{
-												position:{lat:8.23999920762243, lng:124.2441856382034}, 
-												map:map,
-												icon: {
-														url: 'https://www.freeiconspng.com/uploads/dove-png-picture-19.png',
-														scaledSize: new google.maps.Size(50, 50), // scaled size
-														origin: new google.maps.Point(0,0), // origin
-														anchor: new google.maps.Point(0, 0) // anchor
-													}
-											})
-											);	
+    <br />
+
+	
+</body>
 
 
-			var flypath = [];
-			
-			flypath.push(
-				[
-				    {lat:8.239908953967545, lng:124.24478108857517},
-				    {lat:8.23999920762243, lng:124.2441856382034}
-				]
-			);
-			
-    
-            var redraw = function(payload) {
-				
-			    for (i = 0; i < payload.message.length; i++)
-			     {
-                    lat = payload.message[i].lat;
-                    lng = payload.message[i].lng;
-                    map.setCenter({lat:lat, lng:lng, alt:0});
-                    mark[i].setPosition({lat:lat, lng:lng, alt:0});
-                 }
-				 flypath.push(payload.message);
-				 drawPath();
-			}
-    
-            pubnub.addListener({message:redraw});   
-			
-			
-			
-			function race(locs)
-			{
-					pubnub.publish({channel:pnChannel, message:locs});
-			}
-    
-			function drawPath()
-			{
-				var flypaths = [];
-				var totalbirds = flypath[0].length;
-			    var polylines = [];
-			   for (i = 0; i < totalbirds; i++)
-			   {
-				   flypaths[i] = [];
-			       for (j = 0; j < flypath.length; j++)
-				   {
-				      flypaths[i].push(flypath[j][i]);
-				   }
-				
-						
-			   }
-			   
-			   
-			   for (k = 0; k < totalbirds; k ++)
-			   {
-			   			   const polyline = 
-							new google.maps.Polyline({
-							path: flypaths[k],
-							geodesic: true,
-							strokeColor: birds[k].color,
-							strokeOpacity: 1.0,
-							strokeWeight: 5,
-							});
-					
-				            polyline.setMap(map);
-			   
-			   }
-			   
-			   
-			   return flypaths;
-			}
-			
-           
-			function move1()	
-				{										   
-				race([
-						{lat:8.239806678867545, lng:124.24480159663443},
-						{lat:8.239786846048755, lng:124.24441094374949},
-					]);
-				}
-				
-			function move2()
-			 {
-				race([
-							{lat:8.239847523719664, lng:124.24433546320800},
-							{lat:8.239744373720356, lng:124.24443240142054},
-					]);
-			 }
-
-			 function move3()
-			 {
-				race([
-						{lat:8.240146868607766, lng: 124.24481875522838},
-						{lat:8.240296513634057, lng:124.2448508260061},
-					]);
-			 }										   
-				
-			
-        </script>
-       
-
-
-    </body>
 </html>
