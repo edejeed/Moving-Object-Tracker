@@ -7,7 +7,7 @@ app = Flask(__name__)
 connection = psycopg2.connect(
     dbname='track',
     user='postgres',
-    password='helloworld',
+    password='12345678',
     host='localhost'
 )
 cursor = connection.cursor()
@@ -40,7 +40,7 @@ def get_coordinates():
 def get_map():
     site_list = get_site_list()
     print(site_list)
-    return render_template('index.html')
+    return render_template('index.html', site_list=site_list)
 
 if __name__ == '__main__':
     app.run(debug=True)
