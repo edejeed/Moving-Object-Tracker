@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION get_all_sites_json()
+CREATE OR REPLACE FUNCTION get_all_sites()
 RETURNS JSON AS $$
 DECLARE
     result_json JSON;
@@ -9,4 +9,4 @@ END;
 $$ LANGUAGE plpgsql;
 
 
---SELECT get_all_sites_json();
+--SELECT get_all_sites();
