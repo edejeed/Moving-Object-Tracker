@@ -13,6 +13,12 @@ connection = psycopg2.connect(
 cursor = connection.cursor()
 
 
+def get_site_list():
+    cursor = connection.cursor()
+    cursor.callproc('get_all_sites')
+    site_result = cursor.fetchone()[0]   
+    cursor.close()
+    return site_result
 
 def get_coordinates_list():
     cursor = connection.cursor()
@@ -20,15 +26,6 @@ def get_coordinates_list():
     result = cursor.fetchone()[0]   
     cursor.close()
     return result
-
-@app.route('/')
-def get_coordinates_route():
-    try:
-        coordinates_list = get_coordinates_list()
-        print(coordinates_list)
-        return render_template('app.html', locations=coordinates_list)
-    except Exception as e:
-        return jsonify({'error': str(e)})
     
 @app.route('/get_coordinates/', methods=['GET'])
 def get_coordinates():
@@ -39,8 +36,10 @@ def get_coordinates():
     except Exception as e:
         return jsonify({'error': str(e)})
 
-@app.route('/map', methods=['GET'])
+@app.route('/', methods=['GET'])
 def get_map():
+    site_list = get_site_list()
+    print(site_list)
     return render_template('index.html')
 
 if __name__ == '__main__':
