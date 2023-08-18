@@ -12,7 +12,7 @@
     
 		<div class="row">
 			<div class="col-sm-7">
-				<table class="table">
+				<table class="table table-bordered">
 					<thead>
 						<tr>
 							<th scope="col">Location Id</th>
@@ -25,7 +25,8 @@
 						<tr>
 							<th scope="row">{{ row['id'] }}</th>
 							<td>{{ row['name'] }}</td>
-							<td><button class="btn btn-primary">Select</button></td>
+							<td><button class="btn btn-primary" onclick="selectLocation({{ row['latitude'] }}, {{ row['longitude'] }})">Select</button></td>
+
 						</tr>
 						{% endfor %}
 					</tbody>
@@ -34,10 +35,15 @@
 			</div>
 			<div class="col-sm-5" id="map-canvas" style="width:600px;height:400px"></div>
 				<script>
-					// Philippine Map
-					window.lat = 8.239908953967545;
-					window.lng = 124.24478108857517;
-					var map = new google.maps.Map(document.getElementById('map-canvas'), {center:{lat:lat,lng:lng},zoom:16});
+					// Default center
+					var defaultLat = 8.239908953967545;
+					var defaultLng = 124.24478108857517;
+					var map = new google.maps.Map(document.getElementById('map-canvas'), {center: {lat: defaultLat, lng: defaultLng}, zoom: 16});
+
+					// Function to update map center
+					function selectLocation(latitude, longitude) {
+						map.setCenter({ lat: latitude, lng: longitude });
+					}
 				</script>
 			</div>
 		</div>
