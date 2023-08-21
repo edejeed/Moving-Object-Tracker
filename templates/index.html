@@ -88,55 +88,60 @@
 						return {lat:window.lat + y, lng:window.lng + x};
 					};
 
-					var birds = [];
+					//var birds = [];
 
-					birds.push(
-						{
-							color: "#FF0000"
-						}
-					);
+					//birds.push(
+					//	{
+					//		color: "#FF0000"
+					//	}
+					//);
 					
-					birds.push(
-						{
-							color: "#ADD8E6"
-						}
-					);
 
-					var mark = []
+					//var mark = []
 
-					mark.push( new google.maps.Marker(
-													{
-														position:{lat:8.239908953967545, lng:124.24478108857517}, 
-														map:map,
-														icon: {
-																url: 'https://www.freeiconspng.com/uploads/pigeon-dove-png-transparent-31.png',
-																scaledSize: new google.maps.Size(50, 50), // scaled size
-																origin: new google.maps.Point(0,0), // origin
-																anchor: new google.maps.Point(0, 0) // anchor
-															}
-													})
-													);
-																						
-													
-					mark.push( new google.maps.Marker(
-													{
-														position:{lat:8.23999920762243, lng:124.2441856382034}, 
-														map:map,
-														icon: {
-																url: 'https://www.freeiconspng.com/uploads/dove-png-picture-19.png',
-																scaledSize: new google.maps.Size(50, 50), // scaled size
-																origin: new google.maps.Point(0,0), // origin
-																anchor: new google.maps.Point(0, 0) // anchor
-															}
-													})
-													);	
+					//mark.push( new google.maps.Marker(
+					//								{
+					//									position:{lat:8.239908953967545, lng:124.24478108857517}, 
+					//									map:map,
+					//									icon: {
+					//											url: 'https://www.freeiconspng.com/uploads/pigeon-dove-png-transparent-31.png',
+					//											scaledSize: new google.maps.Size(50, 50), // scaled size
+					//											origin: new google.maps.Point(0,0), // origin
+					//											anchor: new google.maps.Point(0, 0) // anchor
+					//										}
+					//								})
+					//								);
+					
+					// Sample data for bird information
+					var birds = [
+							{ lat: 8.239908953967545, lng: 124.24478108857517, color: "#FF0000", iconUrl: 'https://www.freeiconspng.com/uploads/pigeon-dove-png-transparent-31.png' },
+							// Add more bird data as needed
+					];
 
-													var flypath = [];
+					var markers = [];
+
+					// Loop through the bird data and create markers for each bird
+					birds.forEach(function (birdData) {
+							var marker = new google.maps.Marker({
+									position: { lat: birdData.lat, lng: birdData.lng },
+									map: map,
+									icon: {
+											url: birdData.iconUrl,
+											scaledSize: new google.maps.Size(50, 50),
+											origin: new google.maps.Point(0, 0),
+											anchor: new google.maps.Point(0, 0)
+									}
+							});
+
+							markers.push(marker);
+					});
+
+
+					var flypath = [];
 			
 					flypath.push(
 						[
-							{lat:8.239908953967545, lng:124.24478108857517},
-							{lat:8.23999920762243, lng:124.2441856382034}
+							{lat:8.239908953967545, lng:124.24478108857517}
 						]
 					);
 					
@@ -146,7 +151,10 @@
 					//};
 					
 					//window.initialize = initialize;
-			
+					
+
+
+					// Counts the number of birds and store their lat and lng
 					var redraw = function(payload) {
 					
 						for (i = 0; i < payload.message.length; i++)
@@ -154,7 +162,7 @@
 							lat = payload.message[i].lat;
 							lng = payload.message[i].lng;
 							map.setCenter({lat:lat, lng:lng, alt:0});
-							mark[i].setPosition({lat:lat, lng:lng, alt:0});
+							markers[i].setPosition({lat:lat, lng:lng, alt:0});
 						}
 						flypath.push(payload.message);
 						drawPath();
@@ -162,13 +170,8 @@
 			
 					pubnub.addListener({message:redraw});   
 					
-					
-					
-					function race(locs)
-					{
-							pubnub.publish({channel:pnChannel, message:locs});
-					}
-			
+
+					// Makes a path of each bird and store in flypaths array
 					function drawPath()
 					{
 						var flypaths = [];
@@ -185,7 +188,7 @@
 								
 					}
 					
-					
+					// Draws a path from the flypath array
 					for (k = 0; k < totalbirds; k ++)
 					{
 								const polyline = 
@@ -204,33 +207,9 @@
 					
 					return flypaths;
 					}
-
-					function move1()	
-						{										   
-						race([
-								{lat:8.239806678867545, lng:124.24480159663443},
-								{lat:8.239786846048755, lng:124.24441094374949},
-							]);
-						}
-						
-					function move2()
-					{
-						race([
-									{lat:8.239847523719664, lng:124.24433546320800},
-									{lat:8.239744373720356, lng:124.24443240142054},
-							]);
-					}
-
-					function move3()
-					{
-						race([
-								{lat:8.240146868607766, lng: 124.24481875522838},
-								{lat:8.240296513634057, lng:124.2448508260061},
-							]);
-					}		
 					
 					// https://www.gpsvisualizer.com/draw/ for drawing maps as sample
-					
+
 
 				</script>
 			</div>
