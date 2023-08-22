@@ -116,7 +116,8 @@
 					// List of birdies
 					var birds = [
 							{ lat: 8.239908953967545, lng: 124.24478108857517, color: "#FF0000", iconUrl: 'https://www.freeiconspng.com/uploads/pigeon-dove-png-transparent-31.png' },
-							// Add more birdie data
+							{ lat: 8.23999920762243, lng: 124.2441856382034, color: "#ADD8E6", iconUrl: 'https://www.freeiconspng.com/uploads/dove-png-picture-19.png' },
+							{ lat: 8.24372740000000, lng: 124.2429042000000, color: "#008000", iconUrl: 'https://www.freeiconspng.com/uploads/dove-png-picture-19.png' },
 					];
 
 					var markers = [];
@@ -142,7 +143,9 @@
 			
 					flypath.push(
 						[
-							{lat:8.239908953967545, lng:124.24478108857517}
+							{lat:8.239908953967545, lng: 124.24478108857517},
+							{lat: 8.23999920762243, lng: 124.2441856382034},
+							{lat: 8.2437274, lng: 124.2429042}
 						]
 					);
 					
@@ -157,6 +160,8 @@
 
 					// Counts the number of birds and store their lat and lng
 					var redraw = function(payload) {
+
+						console.log(payload.message)
 					
 						for (i = 0; i < payload.message.length; i++)
 						{

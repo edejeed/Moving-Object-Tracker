@@ -5,9 +5,9 @@ app = Flask(__name__)
 
 # Database connection
 connection = psycopg2.connect(
-    dbname='tracker',
+    dbname='track',
     user='postgres',
-    password='marmar2128',
+    password='12345678',
     host='localhost'
 )
 cursor = connection.cursor()
